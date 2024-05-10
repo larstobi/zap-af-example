@@ -1,0 +1,22 @@
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Scan the webapplication
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ZAP Automation Framework
+        uses: zaproxy/action-af@main
+        env:
+          ZAP_SCAN_URL: ${{ vars.ZAP_SCAN_URL }}
+        with:
+          plan: '.github/workflows/zap/plan.yml'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sarif-json
+          path: "sarif.json"
